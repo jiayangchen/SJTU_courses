@@ -1,0 +1,19 @@
+SJTU_SportsMeeting 文件中为Use Case图
+
+SJTUSportsManager 文件中为类图
+
+【详述】
+
+类图中 Student、Administrator、Professor 均继承自Person类
+
+根据要求，裁判可从师生中选择，即Referee 双重继承自Student 和 Professor
+
+Athlete继承自Student类（默认只有学生参赛）
+
+Data类表示数据库系统，其中师生信息系统向Person导入数据
+
+而与其关联的DataItem的三个子类Enrollment负责报名，Grades负责登记成绩，SportsGame负责项目信息 
+
+Managerment对DataItem进行管理操作，系统管理员和运动会管理员分别是Administrator的两个子类，通过
+
+与权限管理和项目管理两个Management子类的联系对Enrollment、Grades和SportsGame进行管理。

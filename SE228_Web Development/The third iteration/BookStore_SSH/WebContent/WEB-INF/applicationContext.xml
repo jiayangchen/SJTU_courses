@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<!-- 连接数据库的部分 ， 类比hibernate.cfg.xml -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">	
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>	
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/mystore</value>
+		</property>		
+		<property name="username">
+			<value>root</value>
+		</property>		
+		<property name="password">
+			<value></value>
+		</property>		
+	</bean>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref local="dataSource"/>
+		</property>		
+		<property name="mappingResources">
+			<list>
+				<value>com\cjy\bean\User.hbm.xml</value>	
+				<value>com\cjy\bean\Book.hbm.xml</value>	
+				<value>com\cjy\bean\Order.hbm.xml</value>						
+			</list>
+		</property>
+		
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>		
+	</bean>
+		
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" >
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	
+	<!-- 把DAO注入给SessionFactory -->
+	<!-- UserDAO -->
+	<bean id="userDAO" class="com.cjy.dao.impl.UserDAOImpl" scope="singleton">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>	
+	<!-- BookDAO -->
+	<bean id="bookDAO" class="com.cjy.dao.impl.BookDAOImpl" scope="singleton">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<!-- OrderDAO -->
+	<bean id="orderDAO" class="com.cjy.dao.impl.OrderDAOImpl" scope="singleton">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+
+
+
+	<!-- 登录和注册的验证Action -->
+	<bean id="loginAction" class="com.cjy.action.loginAction" scope="prototype">
+   		<property name="userService" ref="userService" />	
+	</bean>	
+	<bean id="registerAction" class="com.cjy.action.admin.saveUserAction" scope="prototype">
+   		<property name="userService" ref="userService" />
+	</bean>	
+	<bean id="logoutAction" class="com.cjy.action.logoutAction" scope="prototype">
+   		<property name="userService" ref="userService" />
+	</bean>	
+	<bean id="listBookAction" class="com.cjy.action.listBookAction" scope="prototype">
+   		<property name="bookService" ref="bookService" />
+	</bean>	
+
+	<!-- 管理员对用户增删改查的操作的Action映射到实体类 -->
+	
+	<bean id="saveUserAction" class="com.cjy.action.admin.saveUserAction" scope="prototype">
+		<property name="userService" ref="userService"></property>
+	</bean>	
+	<bean id="searchUserAction" class="com.cjy.action.admin.searchUserAction" scope="prototype">
+		<property name="userService" ref="userService"></property>
+	</bean>		
+	<bean id="listUserAction" class="com.cjy.action.admin.listUserAction" scope="prototype">
+		<property name="userService" ref="userService"></property>
+	</bean>		
+	<bean id="deleteUserAction" class="com.cjy.action.admin.deleteUserAction" scope="prototype">
+		<property name="userService" ref="userService"></property>		
+	</bean>		
+	<bean id="updatePUserAction" class="com.cjy.action.admin.updatePUserAction">
+		<property name="userService" ref="userService"></property>
+	</bean>
+	<bean id="updateUserAction" class="com.cjy.action.admin.updateUserAction">
+		<property name="userService" ref="userService"></property>
+	</bean>
+	
+	<!-- 管理员对图书的增删改查操作的Action映射到实体类 -->
+	<bean id="saveBookAction" class="com.cjy.action.admin.saveBookAction" scope="prototype">
+   		<property name="bookService" ref="bookService" />
+	</bean>
+	<bean id="searchBookAction" class="com.cjy.action.admin.searchBookAction" scope="prototype">
+		<property name="bookService" ref="bookService"></property>
+	</bean>
+	<bean id="deleteBookAction" class="com.cjy.action.admin.deleteBookAction" scope="prototype">
+		<property name="bookService" ref="bookService"></property>		
+	</bean>	
+	<bean id="updatePBookAction" class="com.cjy.action.admin.updatePBookAction">
+		<property name="bookService" ref="bookService"></property>
+	</bean>
+	<bean id="updateBookAction" class="com.cjy.action.admin.updateBookAction">
+		<property name="bookService" ref="bookService"></property>
+	</bean>
+
+	<!-- 用户搜索书籍 -->
+	<bean id="searchBookByUserAction" class="com.cjy.action.admin.searchBookAction" scope="prototype">
+		<property name="bookService" ref="bookService"></property>
+	</bean>
+	<!-- 用户支付价款 -->
+	<bean id="payAction" class="com.cjy.action.payOrderAction" scope="prototype">
+		<property name="orderService" ref="orderService"></property>
+	</bean>
+
+	<!-- 把UserService注入给DAO -->
+	<bean id="userService" class="com.cjy.service.impl.UserServiceImpl" scope="singleton">
+		<property name="userDAO" ref="userDAO" />
+	</bean>
+	
+	<!-- 把BookService注入给DAO -->
+	<bean id="bookService" class="com.cjy.service.impl.BookServiceImpl" scope="singleton">
+		<property name="bookDAO" ref="bookDAO" />
+	</bean>
+
+	<!-- 把OrderService注入给DAO -->
+	<bean id="orderService" class="com.cjy.service.impl.OrderServiceImpl" scope="singleton">
+		<property name="orderDAO" ref="orderDAO" />
+	</bean>
+</beans>

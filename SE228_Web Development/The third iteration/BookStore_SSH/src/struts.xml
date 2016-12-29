@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.objectFactory" value="spring"></constant>
+	<constant name="struts.i18n.encoding" value="utf-8"></constant>
+	
+	<package name="bookstore"  extends="struts-default">
+		
+		<!-- 对登录的信息进行验证 -->
+		<action name="loginTest" class="loginAction">
+			<result name="success">/isuser.jsp</result>
+			<result name="error">/isadmin.jsp</result>
+			<result name="login">/error.jsp</result>
+		</action>
+		<action name="registerTest" class="registerAction">
+			<result name="success">/isuser.jsp</result>
+			<result name="error">/pages/adminJSP/error.jsp</result>
+		</action>
+		<action name="logoutTest" class="logoutAction">
+			<result name="success">/login.jsp</result>
+			<result name="error">/pages/adminJSP/error.jsp</result>
+		</action>
+		<action name="listBook" class="listBookAction">
+			<result name="success">/index.jsp</result>
+			<result name="error">/index.jsp</result>
+		</action>
+		
+		
+		<!-- 管理员对用户的请求管理与转发 -->
+		<action name="saveUser" class="saveUserAction">
+			<result name="success">/pages/adminJSP/error.jsp</result>
+		</action>
+		
+		<action name="searchUser" class="searchUserAction">
+			<result name="success">/pages/adminJSP/listUser.jsp</result>
+		</action>
+		
+		<action name="deleteUser" class="deleteUserAction">
+			<result name="success" type="redirect">searchUser.action</result>
+		</action>
+		
+		<action name="updatePUser" class="updatePUserAction">
+			<result name="success">/pages/adminJSP/update.jsp</result>
+		</action>
+		
+		<action name="updateUser" class="updateUserAction">
+			<result name="success" type="redirect">/pages/adminJSP/updateMsg.jsp</result>
+		</action>
+		
+		<!-- 管理员对图书的请求管理与转发 -->
+		<action name="saveBook" class="saveBookAction">
+			<result name="success">/pages/adminJSP/error.jsp</result>
+		</action>
+		<action name="searchBook" class="searchBookAction">
+			<result name="success">/pages/adminJSP/listBook.jsp</result>
+		</action>
+		<action name="deleteBook" class="deleteBookAction">
+			<result name="success" type="redirect">searchBook.action</result>
+		</action>
+		<action name="updatePBook" class="updatePBookAction">
+			<result name="success">/pages/adminJSP/updateBook.jsp</result>
+		</action>
+		<action name="updateBook" class="updateBookAction">
+			<result name="success" type="redirect">/pages/adminJSP/updateBookMsg.jsp</result>
+		</action>
+		
+		
+		<!-- 用户的操作 -->
+		<action name="searchBookByUser" class="searchBookByUserAction">
+			<result name="success">/pages/userJSP/listBook.jsp</result>
+		</action>
+		<action name="pay" class="payAction">
+			<result name="success">/pay.jsp</result>
+			<result name="error">/pay.jsp</result>
+		</action>
+	
+	
+		<!-- Ajax 与  Action 类的请求 -->
+		<action name="getKeyExist" class="com.cjy.action.TestAction" method="getKeyExist">
+        </action>	
+		<action name="listAllBook" class="com.cjy.action.listBookAction" method="listAllBook">
+        </action>
+        <action name="shopCart" class="com.cjy.action.shopCartAction" method="shopCart">
+        </action>
+         <action name="listAllOrderByUser" class="com.cjy.action.listOrderByUserAction" method="listOrderByUser">
+        </action>
+        
+        <!-- 数据统计的 Ajax 操作 -->
+         <action name="slistUser" class="com.cjy.action.statistics.slistUserAction" method="slistUser">
+        </action>
+        <action name="listspecificbook" class="com.cjy.action.statistics.listSpecificBookAction" method="slistspecificbook">
+        </action>
+        <action name="listdate" class="com.cjy.action.statistics.listSalesAction" method="listsales">
+        </action>
+        
+        <!-- MongoDB 与 Ajax -->
+        <action name="mongosearch" class="com.cjy.action.mongo.mongosAction" method="mongoS">
+        </action>
+        <action name="mongoinsert" class="com.cjy.action.mongo.mongoiAction" method="mongoI">
+        </action>
+        <action name="mongoupdate" class="com.cjy.action.mongo.mongouAction" method="mongoU">
+        </action>
+        <action name="mongodelete" class="com.cjy.action.mongo.mongodAction" method="mongoD">
+        </action>
+		</package>
+</struts>
